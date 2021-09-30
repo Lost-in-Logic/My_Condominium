@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block titulo %}Cadastro{% endblock %}
+{% block js %}
+    function logout() {
+        document.getElementById("form_logout").submit();
+    }
+{% endblock %}
+{% block conteudo %}
+    {% if mensagem != '' %}
+        <h2>{{mensagem}}</h2>
+    {% endif %}
+    <p>Escolha a opção que você quer:</p>
+    <p><a href="/funcionario/novo">Cadastrar fúncionário</a></p>
+    <p><a href="/residencia/novo">Cadastrar residência</a></p>
+    <p><a href="/morador/novo">Cadastrar morados</a></p>
+    <p><a href="/condominio/novo">Cadastrar condomínio</a></p>
+{% endblock %}
