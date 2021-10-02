@@ -9,7 +9,6 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/morador/novo")
 @app.route("/condominio/novo")
-@app.route("/residencia/novo")
 @app.route("/funcionario/novo")
 @app.route("/login")
 def menu():
@@ -20,12 +19,12 @@ def menu():
 
 
 ############################### API
-
+"""""
 def autenticar_login():
     login = request.cookies.get("login", "")
     senha = request.cookies.get("senha", "")
     return db_fazer_login(login, senha)
-
+"""
 ##################################################### BD
 
 def row_to_dict(description, row):
@@ -35,7 +34,6 @@ def row_to_dict(description, row):
         d[description[i][0]] = row[i]
     return d
 
-# Converte uma lista de linhas em um lista de dicionários.
 def rows_to_dict(description, rows):
     result = []
     for row in rows:
@@ -50,12 +48,12 @@ def conectar():
 def db_inicializar():
     with closing(conectar()) as con, closing(con.cursor()) as cur:
         con.commit()
-
+"""""
 def db_fazer_login(login, senha):
     with closing(conectar()) as con, closing(con.cursor) as cur:
         cur.execute("SELECT u.login, u.senha, u.nome FROM usuario u WHERE u.login = ? AND u.senha = ?", [login, senha])
         return row_to_dict(cur.description, cur.fetchone())
-
+"""""
 
 ######################### INIT
 

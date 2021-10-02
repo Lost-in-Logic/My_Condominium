@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo %}Cadastrar condomínio{% endblock %}
+{% block conteudo %}
+    <form action="/condominio/novo" method="POST">
+        <p>
+            <label for="nome">Nome do condomínio:</label>
+            <input type="text" id="numero" name="numero" autocomplete="off" />
+        </p>
+        <p>
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco" autocomplete="off" />
+        </p>
+        <p>
+            <label for="cidade">Cidade:</label>
+            <input type="text" id="cidade" name="cidade" autocomplete="off" />
+        </p>
+        <p>
+            <label for="estado">Estado:</label>
+            <input type="text" id="estado" name="estado" autocomplete="off" />
+        </p>
+        <p>
+            <label for="contato">Contato:</label>
+            <input type="text" id="contato" name="contato" autocomplete="off" />
+        </p>
+        <p>
+            <label for="numeroap">Número de apartamentos/casas:</label>
+            <input type="text" id="numeroap" name="numeroap" autocomplete="off" />
+        </p>
+        <p>
+            <button type="submit">Salvar</button>
+        </p>
+    </form>
+    <p><a href="/">Voltar</a></p>
+{% endblock %}

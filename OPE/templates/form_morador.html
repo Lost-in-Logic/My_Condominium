@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}Cadastrar morador{% endblock %}
+{% block conteudo %}
+    <form action="/morador/novo" method="POST">
+        <p>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" autocomplete="off" />
+        </p>
+        <p>
+            <label for="cpf">Cpf:</label>
+            <input type="text" id="cpf" name="cpf" autocomplete="off" />
+        </p>
+        <p>
+            <label for="rg">Rg:</label>
+            <input type="text" id="rg" name="rg" autocomplete="off" />
+        </p>
+        <p>
+            <label for="apartamento">Apartamento:</label>
+            <input type="text" id="apartamento" name="apartamento" autocomplete="off" />
+        </p>
+        <p>
+            <label for="bloco">Bloco:</label>
+            <input type="text" id="bloco" name="bloco" autocomplete="off" />
+        </p>
+        <p>
+            <label for="dtnasc">Data de nascimento:</label>
+            <input type="text" id="dtnasc" name="dtnasc" autocomplete="off" />
+        </p>
+        <p>
+            <label for="contato">Contato:</label>
+            <input type="text" id="contato" name="contato" autocomplete="off" />
+        </p>
+        <p>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" autocomplete="off" />
+        </p>
+        <p>
+            <label for="vagas">Número da vaga:</label>
+            <input type="text" id="vagas" name="vagas" autocomplete="off" />
+        </p>
+        <p>
+            <button type="submit">Salvar</button>
+        </p>
+    </form>
+    <p><a href="/">Voltar</a></p>
+{% endblock %}
