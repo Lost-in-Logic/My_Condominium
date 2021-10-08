@@ -40,12 +40,8 @@ def criar_morador():
     dtnasc = formulario['dtnasc']
     contato = formulario['contato']
     email = formulario['email']
-    numvaga = formulario['numvaga']
-    cad = db_criarmorador(nome, cpf, rg, apartamento, bloco, dtnasc, contato, email, numvaga)
-    if cad == True:
-        return render_template('menu.html', mensagem = f'O morador {nome} foi cadastrado com sucesso.')
-    else:
-        return render_template('menu.html', mensagem = f'Ocorreu um eerro durante o cadastro.')
+    codigo = db_criarmorador(nome, cpf, rg, apartamento, bloco, dtnasc, contato, email)
+    return render_template('menu.html', mensagem = f'O morador {nome} foi cadastrado com sucesso com o id {codigo}.')
 
 @app.route("/condominio/novo")
 def condominio():
@@ -99,7 +95,7 @@ def rows_to_dict(description, rows):
 #########################################################
 
 sql_create = """
-CREATE TABLE IF NOT EXISTS funcionario (
+CREATE TABLE IF NOT EXISTS Funcionários (
     id_funcionario INTEGER PRIMARY KEY AUTOINCREMENT,
     nome VARCHAR(50) NOT NULL,
     cpf VARCHAR(11) NOT NULL,
@@ -125,15 +121,15 @@ def db_criarfuncionario(nome, cpf, dtnasc, profissao, contato):
         con.commit()
         return codigo
 
-def db_criarmorador(nome, cpf, rg, apartamento, bloco, dtnasc, contato, email, numvaga):
+def db_criarmorador(nome, cpf, rg, apartamento, bloco, dtnasc, contato, email):
     with closing(conectar()) as con, closing(con.cursor()) as cur:
-        cur.execute('INSERT INTO funcionario (nome, cpf, rg, apartamento, bloco, dtnasc, contato, email, numvaga) VALUES (?,?,?,?,?,?,?,?,?)', [nome, cpf, rg, apartamento, bloco, dtnasc, contato, email, numvaga])
+        cur.execute('INSERT INTO Moradores (nome, cpf, rg, apartamento, bloco, dtnasc, contato, email) VALUES (?,?,?,?,?,?,?,?)', [nome, cpf, rg, apartamento, bloco, dtnasc, contato, email])
         con.commit()
-        return
+        return cpf
 
 def db_criarcondominio(nome, endereco, cidade, estado, contato, numeroap):
     with closing(conectar()) as con, closing(con.cursor()) as cur:
-        cur.execute('INSERT INTO funcionario (nome, endereco, cidade, estado, contato, numeroap) VALUES (?,?,?,?,?,?)', [nome, endereco, cidade, estado, contato, numeroap])
+        cur.execute('INSERT INTO Condominios (nome, endereco, cidade, estado, contato, numeroap) VALUES (?,?,?,?,?,?)', [nome, endereco, cidade, estado, contato, numeroap])
         codigo = cur.lastrowid
         con.commit()
         return codigo
