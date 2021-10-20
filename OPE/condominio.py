@@ -22,6 +22,11 @@ def criar_funcionario():
     codigo = db_criarfuncionario(nome, cpf, dtnasc, profissao, contato)
     return render_template("menu.html", mensagem = f'O funcionário com o código {codigo} foi criado com sucesso.')
 
+@app.route("/funcionario")
+def listar_funcionarios():
+    funcionarios = db_listar_funcionarios()
+    return render_template("funcionarios.html", funcionarios = funcionarios)
+
 
 @app.route("/login")
 @app.route("/")
@@ -43,9 +48,16 @@ def criar_morador():
     codigo = db_criarmorador(nome, cpf, rg, apartamento, bloco, dtnasc, contato, email)
     return render_template('menu.html', mensagem = f'O morador {nome} foi cadastrado com sucesso com o id {codigo}.')
 
+@app.route("/morador")
+def listar_moradores():
+    moradores = db_listar_moradores()
+    return render_template("moradores.html", moradores = moradores)
+
+
 @app.route("/condominio/novo")
 def condominio():
     return render_template("form_condominio.html")
+
 app.route("/condominio/novo", methods = ['POST'])
 def criar_condominio():
     formulario = request.form
@@ -116,7 +128,7 @@ def db_inicializar():
 
 def db_criarfuncionario(nome, cpf, dtnasc, profissao, contato):
     with closing(conectar()) as con, closing(con.cursor()) as cur:
-        cur.execute('INSERT INTO funcionario (nome, cpf, dtnasc, profissao, contato) VALUES (?,?,?,?,?)', [nome, cpf, dtnasc, profissao, contato])
+        cur.execute('INSERT INTO Funcionários (nome, cpf, dtnasc, profissao, contato) VALUES (?,?,?,?,?)', [nome, cpf, dtnasc, profissao, contato])
         codigo = cur.lastrowid
         con.commit()
         return codigo
@@ -124,8 +136,9 @@ def db_criarfuncionario(nome, cpf, dtnasc, profissao, contato):
 def db_criarmorador(nome, cpf, rg, apartamento, bloco, dtnasc, contato, email):
     with closing(conectar()) as con, closing(con.cursor()) as cur:
         cur.execute('INSERT INTO Moradores (nome, cpf, rg, apartamento, bloco, dtnasc, contato, email) VALUES (?,?,?,?,?,?,?,?)', [nome, cpf, rg, apartamento, bloco, dtnasc, contato, email])
+        codigo = cur.lastrowid
         con.commit()
-        return cpf
+        return codigo
 
 def db_criarcondominio(nome, endereco, cidade, estado, contato, numeroap):
     with closing(conectar()) as con, closing(con.cursor()) as cur:
@@ -139,6 +152,17 @@ def db_fazer_login(login, senha):
         cur.execute("SELECT u.login, u.senha, u.nome FROM usuario u WHERE u.login = ? AND u.senha = ?", [login, senha])
         return row_to_dict(cur.description, cur.fetchone())
 """""
+
+def db_listar_funcionarios():
+    with closing(conectar()) as con, closing(con.cursor()) as cur:
+        cur.execute('SELECT id_funcionario, nome, cpf, dtnasc, profissao, contato from Funcionários')
+        return rows_to_dict(cur.description, cur.fetchall())
+
+def db_listar_moradores():
+    with closing(conectar()) as con, closing(con.cursor()) as cur:
+        cur.execute('SELECT idmorador, nome, cpf, rg, apartamento, bloco, dtnasc, contato, email from Moradores')
+        return rows_to_dict(cur.description, cur.fetchall())
+
 
 ######################### INIT
 

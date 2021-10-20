@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Funcionários{% endblock %}
+{% block conteudo %}
+    <h1>Funcionários:</h1>
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Nome</td>
+            <td>CPF</td>
+            <td>Data de nascimento</td>
+            <td>Função</td>
+            <td>Contato</td>
+        </tr>
+        {% for func in funcionarios %}
+            <tr>
+                <td>{{func['id_funcionario']}}</td>
+                <td>{{func['Nome']}}</td>
+                <td>{{func['CPF']}}</td>
+                <td>{{func['dtnasc']}}</td>
+                <td>{{func['profissao']}}</td>
+                <td>{{func['Contato']}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p><a href="/">Voltar</a></p>
+{% endblock %}
