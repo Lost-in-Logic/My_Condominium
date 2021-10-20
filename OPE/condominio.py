@@ -27,9 +27,8 @@ def listar_funcionarios():
     funcionarios = db_listar_funcionarios()
     return render_template("funcionarios.html", funcionarios = funcionarios)
 
-
-@app.route("/login")
 @app.route("/")
+
 @app.route("/morador/novo")
 def morador():
     return render_template("form_morador.html")
@@ -107,14 +106,60 @@ def rows_to_dict(description, rows):
 #########################################################
 
 sql_create = """
-CREATE TABLE IF NOT EXISTS Funcionários (
-    id_funcionario INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS Apartamentos (
+    idresidencia INTEGER PRIMARY KEY AUTO INCREMENT,
+    numresidencia VARCHAR(50) NOT NULL,
+    bloco VARCHAR(50),
+    idcond INTEGER REFERENCES Condominios (idcond)
+);
+CREATE TABLE IF NOT EXISTS AreaComum (
+    nome TEXT NOT NULL,
+    statusreserva BOOLEAN NOT NULL,
+    dtreserva DATETIME,
+    idlocador INTEGER REFERENCES Moradores (idmorador),
+    idarea INTEGER  PRIMARY KEY NOT NULL,
+    idcond INTEGER REFERENCES Condominios (idcond) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Condominios (
+    idcond INT PRIMARY KEY NOT NULL,
+    nome TEXT NOT NULL,
+    endereço TEXT NOT NULL,
+    cidade TEXT NOT NULL,
+    estado TEXT NOT NULL,
+    contato TEXT,
+    qtdresidencias NUMERIC NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Encomendas (
+    dtentrega DATETIME NOT NULL,
+    retirado BOOLEAN,
+    dtretirada DATETIME,
+    residencia REFERENCES Apartamentos (numresidencia) PRIMARY KEY
+);
+CREATE TABLE IF NOT EXISTS Funcionarios (
+    idfuncionario INTEGER PRIMARY KEY AUTOINCREMENT,
     nome VARCHAR(50) NOT NULL,
     cpf VARCHAR(11) NOT NULL,
     dtnasc DATE NOT NULL,
     profissao VARCHAR(50) NOT NULL,
     contato VARCHAR(100) NOT NULL,
     UNIQUE(cpf)
+);
+CREATE TABLE IF NOT EXISTS Moradores (
+    nome TEXT NOT NULL,
+    cpf NUMERIC,
+    rg NUMERIC,
+    apartamento NUMERIC NOT NULL,
+    bloco TEXT,
+    dtnasc DATE NOT NULL,
+    contato  NUMERIC,
+    email  TEXT,
+    idmorador INTEGER PRIMARY KEY NOT NULL,
+    idcond REFERENCES Condominios (idcond)
+);
+CREATE TABLE IF NOT EXISTS VagasdeCarro (
+    numvaga NUMERIC PRIMARY KEY NOT NULL,
+    idmorador INTEGER REFERENCES Moradores (idmorador),
+    idcond INTEGER REFERENCES Condominios (idcond) 
 );
 """
 
