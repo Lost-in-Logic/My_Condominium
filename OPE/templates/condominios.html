@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Condominios{% endblock %}
+{% block conteudo %}
+    <h1>Condominios:</h1>
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Nome</td>
+            <td>Endereço</td>
+            <td>Cidade</td>
+            <td>Cidade</td>
+            <td>Estado</td>
+            <td>Contato</td>
+            <td>Residências</td>
+        </tr>
+        {% for cond in Condominios %}
+            <tr>
+                <td>{{cond['idcond']}}</td>
+                <td>{{cond['nome']}}</td>
+                <td>{{cond['endereco']}}</td>
+                <td>{{cond['cidade']}}</td>
+                <td>{{cond['estado']}}</td>
+                <td>{{cond['contato']}}</td>
+                <td>{{cond['qtdresidencias']}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p><a href="/">Voltar</a></p>
+{% endblock %}

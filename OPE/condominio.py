@@ -28,6 +28,8 @@ def listar_funcionarios():
     return render_template("funcionarios.html", funcionarios = funcionarios)
 
 @app.route("/")
+def menu():
+    return render_template("menu.html")
 
 @app.route("/morador/novo")
 def morador():
@@ -57,7 +59,7 @@ def listar_moradores():
 def condominio():
     return render_template("form_condominio.html")
 
-app.route("/condominio/novo", methods = ['POST'])
+@app.route("/condominio/novo", methods = ['POST'])
 def criar_condominio():
     formulario = request.form
     nome = formulario['nome']
@@ -65,19 +67,14 @@ def criar_condominio():
     cidade = formulario['cidade']
     estado = formulario['estado']
     contato = formulario['contato']
-    numeroap = formulario['numeroap']
-    codigo = db_criarcondominio(nome, endereco, cidade, estado, contato, numeroap)
-    return render_template("menu.html", mensagem = f'O funcionário com o código {codigo} foi criado com sucesso.')
+    qtdresidencias = formulario['qtdresidencias']
+    codigo = db_criarcondominio(nome, endereco, cidade, estado, contato, qtdresidencias)
+    return render_template("menu.html", mensagem = f'O condominio com o código {codigo} foi criado com sucesso.')
 
-    
-
-def menu():
-    return render_template("menu.html")
-
-
-
-
-
+@app.route("/condominio")
+def listar_condominios():
+    condominios = db_listar_condominios()
+    return render_template("condominios.html", condominios = condominios)
 
 
 
@@ -107,7 +104,7 @@ def rows_to_dict(description, rows):
 
 sql_create = """
 CREATE TABLE IF NOT EXISTS Apartamentos (
-    idresidencia INTEGER PRIMARY KEY AUTO INCREMENT,
+    idresidencia INTEGER PRIMARY KEY AUTOINCREMENT,
     numresidencia VARCHAR(50) NOT NULL,
     bloco VARCHAR(50),
     idcond INTEGER REFERENCES Condominios (idcond)
@@ -145,6 +142,7 @@ CREATE TABLE IF NOT EXISTS Funcionarios (
     UNIQUE(cpf)
 );
 CREATE TABLE IF NOT EXISTS Moradores (
+    idmorador INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     cpf NUMERIC,
     rg NUMERIC,
@@ -153,8 +151,7 @@ CREATE TABLE IF NOT EXISTS Moradores (
     dtnasc DATE NOT NULL,
     contato  NUMERIC,
     email  TEXT,
-    idmorador INTEGER PRIMARY KEY NOT NULL,
-    idcond REFERENCES Condominios (idcond)
+    idcond TEXT REFERENCES Condominios (idcond)
 );
 CREATE TABLE IF NOT EXISTS VagasdeCarro (
     numvaga NUMERIC PRIMARY KEY NOT NULL,
@@ -171,23 +168,23 @@ def db_inicializar():
         cur.executescript(sql_create)
         con.commit()
 
-def db_criarfuncionario(nome, cpf, dtnasc, profissao, contato):
+def db_criarfuncionario(nome, cpf, dtnasc, profissao, contato, idcond):
     with closing(conectar()) as con, closing(con.cursor()) as cur:
-        cur.execute('INSERT INTO Funcionários (nome, cpf, dtnasc, profissao, contato) VALUES (?,?,?,?,?)', [nome, cpf, dtnasc, profissao, contato])
+        cur.execute('INSERT INTO Funcionários (nome, cpf, dtnasc, profissao, contato, idcond) VALUES (?,?,?,?,?)', [nome, cpf, dtnasc, profissao, contato, idcond])
         codigo = cur.lastrowid
         con.commit()
         return codigo
 
-def db_criarmorador(nome, cpf, rg, apartamento, bloco, dtnasc, contato, email):
+def db_criarmorador(nome, cpf, rg, apartamento, bloco, dtnasc, contato, email, idcond):
     with closing(conectar()) as con, closing(con.cursor()) as cur:
-        cur.execute('INSERT INTO Moradores (nome, cpf, rg, apartamento, bloco, dtnasc, contato, email) VALUES (?,?,?,?,?,?,?,?)', [nome, cpf, rg, apartamento, bloco, dtnasc, contato, email])
+        cur.execute('INSERT INTO Moradores (nome, cpf, rg, apartamento, bloco, dtnasc, contato, email, idcond) VALUES (?,?,?,?,?,?,?,?)', [nome, cpf, rg, apartamento, bloco, dtnasc, contato, email, idcond])
         codigo = cur.lastrowid
         con.commit()
         return codigo
 
-def db_criarcondominio(nome, endereco, cidade, estado, contato, numeroap):
+def db_criarcondominio(nome, endereco, cidade, estado, contato, qtdresidencias):
     with closing(conectar()) as con, closing(con.cursor()) as cur:
-        cur.execute('INSERT INTO Condominios (nome, endereco, cidade, estado, contato, numeroap) VALUES (?,?,?,?,?,?)', [nome, endereco, cidade, estado, contato, numeroap])
+        cur.execute('INSERT INTO Condominios (nome, endereco, cidade, estado, contato, qtdresidencias) VALUES (?,?,?,?,?,?)', [nome, endereco, cidade, estado, contato, qtdresidencias])
         codigo = cur.lastrowid
         con.commit()
         return codigo
@@ -200,13 +197,17 @@ def db_fazer_login(login, senha):
 
 def db_listar_funcionarios():
     with closing(conectar()) as con, closing(con.cursor()) as cur:
-        cur.execute('SELECT id_funcionario, nome, cpf, dtnasc, profissao, contato from Funcionários')
+        cur.execute('SELECT idfuncionario, nome, cpf, dtnasc, profissao, contato, idcond from Funcionarios')
         return rows_to_dict(cur.description, cur.fetchall())
 
 def db_listar_moradores():
     with closing(conectar()) as con, closing(con.cursor()) as cur:
-        cur.execute('SELECT idmorador, nome, cpf, rg, apartamento, bloco, dtnasc, contato, email from Moradores')
+        cur.execute('SELECT idmorador, nome, cpf, rg, apartamento, bloco, dtnasc, contato, email, idcond from Moradores')
         return rows_to_dict(cur.description, cur.fetchall())
+
+def db_listar_condominios():
+    with closing(conectar()) as con, closing(con.cursor()) as cur:
+        cur.execute('SELECT idcond, nome, endereço, cidade, estado, contato, qtdresidencias from Condominios')
 
 
 ######################### INIT
